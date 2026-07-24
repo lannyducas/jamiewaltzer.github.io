@@ -72,14 +72,15 @@ a flat color placeholder (`color: "#1E2530"`, etc.) via `renderHome()` in
 
 ---
 
-## Swapping in real trailers (Vimeo)
+## Swapping in real trailers (Vimeo or YouTube)
 
-Each `FILMS` entry has a `vimeoId` field, currently `null` for all four
-films — this renders a "Trailer coming soon" placeholder on the film page.
+Each `FILMS` entry has `vimeoId` and `youtubeId` fields. `vimeoId` takes
+priority if both are set; if both are `null`, the film page renders a
+"Trailer coming soon" placeholder.
 
-1. Upload the trailer to Vimeo and grab its numeric ID from the video URL (`vimeo.com/<id>`)
-2. Set `vimeoId: "<id>"` on that film's entry in `script.js`
-3. `renderFilm()` will automatically embed it via Vimeo's player iframe — no other changes needed
+1. Upload the trailer to Vimeo or YouTube and grab its ID from the video URL (`vimeo.com/<id>` or `youtube.com/watch?v=<id>`)
+2. Set `vimeoId: "<id>"` or `youtubeId: "<id>"` on that film's entry in `script.js`
+3. `renderFilm()` will automatically embed it via the corresponding player iframe — no other changes needed
 
 ---
 

@@ -1,7 +1,7 @@
 // ─── Film data ────────────────────────────────────────────────
 // Single source of truth for the work grid + individual film pages.
-// To add a film: add an entry here. `vimeoId: null` renders a
-// "trailer coming soon" placeholder until the real ID is dropped in.
+// To add a film: add an entry here. `vimeoId`/`youtubeId: null` renders
+// a "trailer coming soon" placeholder until the real ID is dropped in.
 const FILMS = [
   {
     slug: "after-the-sky-turned-red",
@@ -9,9 +9,18 @@ const FILMS = [
     status: "In post-production",
     role: "Director · DP · Sound · Editor",
     color: "#1E2530",
+    image: "/images/after-the-sky-turned-red.jpg",
+    // Extra stills shown next to the trailer on the film page (optional
+    // on any FILMS entry — only rendered when present).
+    gallery: [
+      { src: "/images/after-the-sky-turned-red-2.jpg", alt: "Reunion dinner" },
+      { src: "/images/after-the-sky-turned-red-3.jpg", alt: "Evening light over the water" },
+      { src: "/images/after-the-sky-turned-red-4.jpg", alt: "Train corridor at night" }
+    ],
     year: null,
-    vimeoId: null,
-    synopsis: "Jamie's debut feature documentary follows her mother and surviving classmates at a reunion in Semey, Kazakhstan — a city that bore the human cost of the Soviet Union's nuclear weapons testing program. It is the beginning of a body of work she intends to dedicate to Central Asian stories."
+    vimeoId: "1210428564",
+    youtubeId: null,
+    synopsis: "<em>After the Sky Turned Red</em> is Jamie's debut feature documentary. It follows her mother and surviving classmates at a reunion in Semey, Kazakhstan — a city that bore the human cost of the Soviet Union's nuclear weapons testing program. 456 nuclear devices were detonated between 1949 and 1989, with Kazakhstan officially recognizing more than 1.5 million citizens as victims of radiation. It is the beginning of a body of work she intends to dedicate to Central Asian stories."
   },
   {
     slug: "after-loss",
@@ -19,9 +28,11 @@ const FILMS = [
     status: "In post-production",
     role: "Assistant Editor",
     color: "#221A14",
+    image: "/images/after-loss.jpg",
     year: null,
     vimeoId: null,
-    synopsis: "A feature documentary by Adrienne von Wolffersdorff. Jamie joins the project as assistant editor."
+    youtubeId: null,
+    synopsis: "<em>After Loss</em> is a feature-length documentary by director Adrienne von Wolffersdorff that centers the often-silent experiences of those who have lived through miscarriage. Up to 25% of clinically recognized pregnancies end in miscarriage — yet grief, medical care, and the emotional weight of that loss remain largely unspoken. The film weaves together personal testimonies to spark a much-needed conversation around an experience shared by so many. Jamie is joining the project as assistant editor."
   },
   {
     slug: "visii",
@@ -31,7 +42,8 @@ const FILMS = [
     color: "#181C1A",
     year: null,
     vimeoId: null,
-    synopsis: "A documentary short shot, directed, and edited independently by Jamie Waltzer."
+    youtubeId: "YtPuG-VuKbA",
+    synopsis: "Meet Veronika, co-owner of <em>Visii</em> — a vintage and designer clothing store in Portland, Oregon. Originally from Russia, Veronika started selling clothes on Depop as a teenager and has since built one of Portland's most personal and carefully sourced vintage stores from the ground up. The vintage market has exploded in recent years, but a lot of what goes on behind the scenes — how pieces are sourced, what international buying trips look like, how to develop a real eye for quality — stays pretty gatekept. In this short documentary, Veronika opens up about all of it. Shot and edited by Jamie."
   },
   {
     slug: "royal-bakehouse",
@@ -41,7 +53,8 @@ const FILMS = [
     color: "#1C1A22",
     year: null,
     vimeoId: null,
-    synopsis: "A documentary short shot, directed, and edited independently by Jamie Waltzer."
+    youtubeId: "e2_UPe7K8iE",
+    synopsis: "Meet Mina, the owner of <em>Royal Bakehouse</em> in Bellevue, Washington — a French bakery she opened at the end of 2020, in the middle of a pandemic. Originally from Iran, Mina's path to pastry took her from Tehran to Toronto to now the Pacific Northwest, where she eventually chose to build her dream. In this short documentary, we follow Mina through her morning routine and hear her story: how she fell in love with baking, what it takes to run a small business, and why she keeps showing up before sunrise every day. Shot and edited by Jamie."
   },
   {
     slug: "social-media-content",
@@ -50,8 +63,31 @@ const FILMS = [
     role: "Creator · Editor",
     color: "#383A3E",
     year: null,
-    vimeoId: null,
-    synopsis: "A collection of social media content created independently by Jamie Waltzer."
+    synopsis: "A collection of short-form and social work — an experimental short film, and an ongoing series made in partnership with the wearable camera brand Computer Angel.",
+    // Collection films render a sub-grid instead of a single embed —
+    // each item gets its own page at /films/social-media-content/<slug>.
+    collection: [
+      {
+        slug: "i-woke-up-with-a-desire-to-see-and-not-be-seen",
+        title: "i woke up with a desire to see and not be seen",
+        role: "DP · Editor",
+        color: "#20242B",
+        youtubeId: "Sp630_JbHJA",
+        synopsis: "A short experimental film about dreams, surveillance, and dread. Shot and edited by Jamie."
+      },
+      {
+        slug: "computer-angel",
+        title: "Computer Angel",
+        role: "DP · Editor · Promotion",
+        color: "#2B2320",
+        synopsis: "An ongoing content series made in partnership with Computer Angel, a wearable camera brand, shot entirely on the device. The work is intimate and introspective — tracing the inner life of a young woman navigating indecision, desire, and the private texture of everyday moments. Content posted across Reels and Carousels has collectively reached over 380,000 views and 30K likes. Shot, edited, and promoted by Jamie.",
+        links: [
+          { label: "Decisions — Carousel", url: "https://www.instagram.com/p/DXwy58okyTV/?img_index=1" },
+          { label: "Decisions — Reel", url: "https://www.instagram.com/p/DX2UStzToQI/" },
+          { label: "Fig — Carousel", url: "https://www.instagram.com/p/DX8_7b3ERQ3/?img_index=1" }
+        ]
+      }
+    ]
   }
 ];
 
@@ -76,6 +112,16 @@ function renderHome() {
   `).join("");
 }
 
+function embedFor(entry) {
+  if (entry.vimeoId) {
+    return `<iframe src="https://player.vimeo.com/video/${entry.vimeoId}?title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>`;
+  }
+  if (entry.youtubeId) {
+    return `<iframe src="https://www.youtube-nocookie.com/embed/${entry.youtubeId}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>`;
+  }
+  return null;
+}
+
 function renderFilm(slug) {
   const container = document.getElementById("page-film");
   const film = filmBySlug(slug);
@@ -90,12 +136,21 @@ function renderFilm(slug) {
     return;
   }
 
-  const embed = film.vimeoId
-    ? `<iframe src="https://player.vimeo.com/video/${film.vimeoId}?title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>`
-    : `<div class="film-embed-placeholder">Trailer coming soon</div>`;
+  if (film.collection) {
+    renderCollection(container, film);
+    return;
+  }
+
+  const embed = embedFor(film) || `<div class="film-embed-placeholder">Trailer coming soon</div>`;
+
+  const gallery = film.gallery ? `
+    <div class="film-gallery">
+      ${film.gallery.map((g) => `<img class="film-gallery-img" src="${g.src}" alt="${g.alt || film.title}" loading="lazy">`).join("")}
+    </div>
+  ` : "";
 
   container.innerHTML = `
-    <div class="film-wrap">
+    <div class="film-wrap${film.gallery ? " film-wrap--wide" : ""}">
       <a class="film-back" href="/" data-link>&larr; Back to work</a>
       <div class="film-header">
         <h1 class="film-title">${film.title}</h1>
@@ -105,8 +160,78 @@ function renderFilm(slug) {
           ${film.year ? `<span>${film.year}</span>` : ""}
         </div>
       </div>
-      <div class="film-embed">${embed}</div>
+      <div class="film-media">
+        <div class="film-embed">${embed}</div>
+        ${gallery}
+      </div>
       <p class="film-synopsis">${film.synopsis}</p>
+    </div>
+  `;
+}
+
+function renderCollection(container, film) {
+  container.innerHTML = `
+    <div class="film-wrap">
+      <a class="film-back" href="/" data-link>&larr; Back to work</a>
+      <div class="film-header">
+        <h1 class="film-title">${film.title}</h1>
+        <div class="film-meta">
+          <span>${film.role}</span>
+        </div>
+      </div>
+      <p class="film-synopsis">${film.synopsis}</p>
+      <div class="collection-grid">
+        ${film.collection.map((item) => `
+          <a class="tile" href="/films/${film.slug}/${item.slug}" data-link>
+            ${item.image
+              ? `<img class="tile-img" src="${item.image}" alt="${item.title}" loading="lazy">`
+              : `<div class="tile-img" style="background:${item.color};"></div>`}
+            <div class="tile-overlay">
+              <h2 class="tile-title">${item.title}</h2>
+              <p class="tile-role">${item.role}</p>
+            </div>
+          </a>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function renderCollectionItem(parentSlug, itemSlug) {
+  const container = document.getElementById("page-film");
+  const film = filmBySlug(parentSlug);
+  const item = film && film.collection && film.collection.find((i) => i.slug === itemSlug);
+
+  if (!film || !item) {
+    container.innerHTML = `
+      <div class="film-wrap">
+        <a class="film-back" href="/" data-link>&larr; Back to work</a>
+        <p class="film-synopsis">Not found.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const embed = embedFor(item);
+
+  container.innerHTML = `
+    <div class="film-wrap">
+      <a class="film-back" href="/films/${film.slug}" data-link>&larr; Back to ${film.title}</a>
+      <div class="film-header">
+        <h1 class="film-title">${item.title}</h1>
+        <div class="film-meta">
+          <span>${item.role}</span>
+        </div>
+      </div>
+      ${embed ? `<div class="film-embed">${embed}</div>` : ""}
+      <p class="film-synopsis">${item.synopsis}</p>
+      ${item.links ? `
+        <ul class="link-list">
+          ${item.links.map((l) => `
+            <li><a class="link-list-item" href="${l.url}" target="_blank" rel="noopener noreferrer">${l.label} &rarr;</a></li>
+          `).join("")}
+        </ul>
+      ` : ""}
     </div>
   `;
 }
@@ -136,6 +261,14 @@ function router() {
   if (path === "/bio") {
     showPage("page-bio");
     setActiveNav("about");
+    return;
+  }
+
+  const collectionItemMatch = path.match(/^\/films\/([^/]+)\/([^/]+)$/);
+  if (collectionItemMatch) {
+    renderCollectionItem(collectionItemMatch[1], collectionItemMatch[2]);
+    showPage("page-film");
+    setActiveNav("work");
     return;
   }
 

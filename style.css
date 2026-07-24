@@ -192,13 +192,39 @@ nav {
 }
 
 /* ─── About Page ─────────────────────────────────────────────── */
+/* Desktop: two columns — media (name + large photo) on the left,
+   content (bio + contact grid) on the right. See mobile override
+   below for the sticky-hero / scroll-over-photo treatment. */
 .about-wrap {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 3rem 4rem;
+  align-items: start;
   padding: 3rem 3rem 5rem;
-  max-width: 780px;
+  max-width: 1120px;
+}
+
+.about-media {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 1.25rem;
+}
+
+.about-photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.about-media-caption {
+  /* Plain text above the photo on desktop; becomes an overlay on
+     the photo itself in the mobile breakpoint below. */
 }
 
 .about-name {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 400;
   letter-spacing: 0.04em;
   line-height: 1.2;
@@ -211,7 +237,6 @@ nav {
   font-style: italic;
   color: var(--muted);
   letter-spacing: 0.02em;
-  margin-bottom: 2.5rem;
 }
 
 .about-body {
@@ -272,6 +297,12 @@ nav {
   max-width: 780px;
 }
 
+/* Wider column for films with a gallery, so the embed + side images
+   have room to sit next to each other instead of cramping. */
+.film-wrap--wide {
+  max-width: 1040px;
+}
+
 .film-back {
   display: inline-block;
   font-size: 11px;
@@ -313,13 +344,38 @@ nav {
   color: var(--muted);
 }
 
+/* Wraps the embed (and, on films with a gallery, the side images) */
+.film-media {
+  margin-bottom: 2.5rem;
+}
+
+.film-wrap--wide .film-media {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
 .film-embed {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
   background: #000;
-  margin-bottom: 2.5rem;
   overflow: hidden;
+}
+
+.film-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.film-gallery-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 10px;
 }
 
 .film-embed iframe {
@@ -351,6 +407,44 @@ nav {
   max-width: 580px;
 }
 
+.film-synopsis em {
+  font-style: italic;
+}
+
+/* ─── Collection Sub-grid ───────────────────────────────────────
+   Used by films with a `collection` array (e.g. Social Media
+   Content) — reuses .tile from the work grid, laid out inside
+   the narrower .film-wrap column instead of full-bleed. */
+.collection-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+/* ─── External Link List (collection items w/ no embed) ───────── */
+.link-list {
+  list-style: none;
+  margin-top: 2rem;
+  border-top: 0.5px solid var(--border);
+}
+
+.link-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 0.5px solid var(--border);
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  transition: color 0.2s ease;
+}
+
+.link-list-item:hover {
+  color: var(--muted);
+}
+
 /* ─── Responsive ─────────────────────────────────────────────── */
 @media (max-width: 680px) {
   nav {
@@ -379,8 +473,49 @@ nav {
     opacity: 1;
   }
 
+  /* Single column: hero photo on top, name/tagline overlaid on it,
+     then content scrolls up over the (sticky) photo as you scroll. */
   .about-wrap {
+    display: block;
     padding: 2rem 1.5rem 4rem;
+  }
+
+  .about-media {
+    position: sticky;
+    top: 0;
+    height: 60vh;
+    z-index: 0;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .about-photo {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    aspect-ratio: auto;
+    border-radius: 0;
+  }
+
+  .about-media-caption {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 1.75rem 1.5rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, transparent 100%);
+  }
+
+  .about-media-caption .about-name,
+  .about-media-caption .about-tagline {
+    color: #EAE8E3;
+  }
+
+  .about-content {
+    position: relative;
+    z-index: 1;
+    background: var(--bg);
+    margin-top: -3rem;
+    padding-top: 2rem;
+    border-radius: 16px 16px 0 0;
   }
 
   .about-grid {
@@ -390,5 +525,14 @@ nav {
 
   .film-wrap {
     padding: 2rem 1.5rem 4rem;
+  }
+
+  .collection-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .film-wrap--wide .film-media {
+    grid-template-columns: 1fr;
   }
 }
