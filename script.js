@@ -7,7 +7,7 @@ const FILMS = [
     slug: "after-the-sky-turned-red",
     title: "After the Sky Turned Red",
     status: "In post-production",
-    role: "Director · Editor · DP",
+    role: "Director · DP · Sound · Editor",
     color: "#1E2530",
     year: null,
     vimeoId: null,
@@ -27,7 +27,7 @@ const FILMS = [
     slug: "visii",
     title: "Visii",
     status: null,
-    role: "Director · Editor · DP · Sound",
+    role: "Director · DP · Sound · Editor",
     color: "#181C1A",
     year: null,
     vimeoId: null,
@@ -37,11 +37,21 @@ const FILMS = [
     slug: "royal-bakehouse",
     title: "Royal Bakehouse",
     status: null,
-    role: "Director · Editor · DP · Sound",
+    role: "Director · DP · Sound · Editor",
     color: "#1C1A22",
     year: null,
     vimeoId: null,
     synopsis: "A documentary short shot, directed, and edited independently by Jamie Waltzer."
+  },
+  {
+    slug: "social-media-content",
+    title: "Social Media Content",
+    status: null,
+    role: "Creator · Editor",
+    color: "#383A3E",
+    year: null,
+    vimeoId: null,
+    synopsis: "A collection of social media content created independently by Jamie Waltzer."
   }
 ];
 
@@ -54,7 +64,9 @@ function renderHome() {
   const grid = document.getElementById("work-grid");
   grid.innerHTML = FILMS.map((f) => `
     <a class="tile" href="/films/${f.slug}" data-link>
-      <div class="tile-img" style="background:${f.color};"></div>
+      ${f.image
+        ? `<img class="tile-img" src="${f.image}" alt="${f.title}" loading="lazy">`
+        : `<div class="tile-img" style="background:${f.color};"></div>`}
       <div class="tile-overlay">
         ${f.status ? `<span class="tile-status">${f.status}</span>` : ""}
         <h2 class="tile-title">${f.title}</h2>
@@ -79,7 +91,7 @@ function renderFilm(slug) {
   }
 
   const embed = film.vimeoId
-    ? `<iframe src="https://player.vimeo.com/video/${film.vimeoId}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`
+    ? `<iframe src="https://player.vimeo.com/video/${film.vimeoId}?title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>`
     : `<div class="film-embed-placeholder">Trailer coming soon</div>`;
 
   container.innerHTML = `
@@ -123,7 +135,7 @@ function router() {
 
   if (path === "/bio") {
     showPage("page-bio");
-    setActiveNav("info");
+    setActiveNav("about");
     return;
   }
 

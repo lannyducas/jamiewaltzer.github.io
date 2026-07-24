@@ -191,13 +191,13 @@ nav {
   opacity: 1;
 }
 
-/* ─── Information Page ───────────────────────────────────────── */
-.info-wrap {
+/* ─── About Page ─────────────────────────────────────────────── */
+.about-wrap {
   padding: 3rem 3rem 5rem;
   max-width: 780px;
 }
 
-.info-name {
+.about-name {
   font-size: 1.5rem;
   font-weight: 400;
   letter-spacing: 0.04em;
@@ -205,7 +205,7 @@ nav {
   margin-bottom: 0.25rem;
 }
 
-.info-tagline {
+.about-tagline {
   font-size: 0.9rem;
   font-weight: 300;
   font-style: italic;
@@ -214,7 +214,7 @@ nav {
   margin-bottom: 2.5rem;
 }
 
-.info-body {
+.about-body {
   font-size: 1rem;
   font-weight: 300;
   line-height: 1.9;
@@ -222,15 +222,15 @@ nav {
   max-width: 580px;
 }
 
-.info-body p + p {
+.about-body p + p {
   margin-top: 1.4rem;
 }
 
-.info-body em {
+.about-body em {
   font-style: italic;
 }
 
-.info-grid {
+.about-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2.5rem 3rem;
@@ -240,13 +240,13 @@ nav {
   max-width: 580px;
 }
 
-.info-col {
+.about-col {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
 }
 
-.info-label {
+.about-label {
   font-size: 9.5px;
   font-weight: 400;
   letter-spacing: 0.15em;
@@ -254,14 +254,14 @@ nav {
   color: var(--muted);
 }
 
-.info-val {
+.about-val {
   font-size: 0.95rem;
   font-weight: 300;
   line-height: 1.85;
   letter-spacing: 0.01em;
 }
 
-.info-val a:hover {
+.about-val a:hover {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -379,11 +379,11 @@ nav {
     opacity: 1;
   }
 
-  .info-wrap {
+  .about-wrap {
     padding: 2rem 1.5rem 4rem;
   }
 
-  .info-grid {
+  .about-grid {
     grid-template-columns: 1fr;
     gap: 2rem;
   }

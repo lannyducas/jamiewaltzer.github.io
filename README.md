@@ -24,7 +24,7 @@ in the URLs:
 
 - `/` — home grid, one tile per entry in `FILMS`
 - `/films/<slug>` — that film's detail page (embedded trailer + synopsis)
-- `/bio` — the Information page (static content in `index.html`)
+- `/bio` — the About page (static content in `index.html`)
 
 **To add a new film:** add one object to the `FILMS` array in `script.js`. No
 new HTML file needed.
@@ -100,7 +100,7 @@ If you have Adobe Fonts access:
 In `index.html`:
 - Replace `your@email.com` with your real email
 - Add your reel link if/when you have one
-- Add Instagram or Vimeo link if you want it in the info grid
+- Add Instagram or Vimeo link if you want it in the about grid
 
 In `script.js`:
 - Fill in real `synopsis` text for each film in `FILMS` (currently placeholder copy)
