@@ -422,6 +422,46 @@ nav {
   margin-top: 2.5rem;
 }
 
+/* ─── Photo Grid (named galleries on collection items, e.g. ───────
+   Computer Angel's "Decisions" / "Fig" sets) — CSS-column masonry,
+   desaturated by default with a full-color reveal on hover for a
+   moody, contact-sheet feel. */
+.gallery-section {
+  margin-top: 3rem;
+}
+
+.gallery-section:first-of-type {
+  margin-top: 2.5rem;
+}
+
+.gallery-heading {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.photo-grid {
+  columns: 3;
+  column-gap: 0.75rem;
+}
+
+.photo-grid img {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.75rem;
+  border-radius: 6px;
+  break-inside: avoid;
+  filter: grayscale(1) contrast(1.05);
+  transition: filter 0.5s ease;
+}
+
+.photo-grid img:hover {
+  filter: grayscale(0);
+}
+
 /* ─── External Link List (collection items w/ no embed) ───────── */
 .link-list {
   list-style: none;
@@ -534,5 +574,9 @@ nav {
 
   .film-wrap--wide .film-media {
     grid-template-columns: 1fr;
+  }
+
+  .photo-grid {
+    columns: 2;
   }
 }

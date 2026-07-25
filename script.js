@@ -40,6 +40,7 @@ const FILMS = [
     status: null,
     role: "Director · DP · Sound · Editor",
     color: "#181C1A",
+    image: "/images/visii.jpg",
     year: null,
     vimeoId: null,
     youtubeId: "YtPuG-VuKbA",
@@ -51,6 +52,7 @@ const FILMS = [
     status: null,
     role: "Director · DP · Sound · Editor",
     color: "#1C1A22",
+    image: "/images/royal-bakehouse.jpg",
     year: null,
     vimeoId: null,
     youtubeId: "e2_UPe7K8iE",
@@ -62,6 +64,7 @@ const FILMS = [
     status: null,
     role: "Creator · Editor",
     color: "#383A3E",
+    image: "/images/social-media-content.jpg",
     year: null,
     synopsis: "A collection of short-form and social work — an experimental short film, and an ongoing series made in partnership with the wearable camera brand Computer Angel.",
     // Collection films render a sub-grid instead of a single embed —
@@ -72,15 +75,35 @@ const FILMS = [
         title: "i woke up with a desire to see and not be seen",
         role: "DP · Editor",
         color: "#20242B",
+        image: "/images/i-woke-up-4.jpg",
         youtubeId: "Sp630_JbHJA",
-        synopsis: "A short experimental film about dreams, surveillance, and dread. Shot and edited by Jamie."
+        synopsis: "A short experimental film about dreams, surveillance, and dread. Shot and edited by Jamie.",
+        gallery: [
+          { src: "/images/i-woke-up-1.jpg", alt: "Film still" },
+          { src: "/images/i-woke-up-2.jpg", alt: "Film still" },
+          { src: "/images/i-woke-up-3.jpg", alt: "Film still" },
+          { src: "/images/i-woke-up-4.jpg", alt: "Film still" },
+          { src: "/images/i-woke-up-5.jpg", alt: "Film still" }
+        ]
       },
       {
         slug: "computer-angel",
         title: "Computer Angel",
         role: "DP · Editor · Promotion",
         color: "#2B2320",
+        image: "/images/computer-angel.jpg",
         synopsis: "An ongoing content series made in partnership with Computer Angel, a wearable camera brand, shot entirely on the device. The work is intimate and introspective — tracing the inner life of a young woman navigating indecision, desire, and the private texture of everyday moments. Content posted across Reels and Carousels has collectively reached over 380,000 views and 30K likes. Shot, edited, and promoted by Jamie.",
+        // Named sub-galleries, each paired with its own Instagram link(s) below.
+        galleries: [
+          {
+            heading: "Decisions",
+            images: [1, 2, 3, 4, 5, 6, 7].map((n) => ({ src: `/images/computer-angel-decisions-${n}.jpg`, alt: "Decisions — still" }))
+          },
+          {
+            heading: "Fig",
+            images: [1, 2, 3, 4, 5, 6].map((n) => ({ src: `/images/computer-angel-fig-${n}.jpg`, alt: "Fig — still" }))
+          }
+        ],
         links: [
           { label: "Decisions — Carousel", url: "https://www.instagram.com/p/DXwy58okyTV/?img_index=1" },
           { label: "Decisions — Reel", url: "https://www.instagram.com/p/DX2UStzToQI/" },
@@ -214,8 +237,30 @@ function renderCollectionItem(parentSlug, itemSlug) {
 
   const embed = embedFor(item);
 
+  const media = embed ? `
+    <div class="film-media">
+      <div class="film-embed">${embed}</div>
+      ${item.gallery ? `
+        <div class="film-gallery">
+          ${item.gallery.map((g) => `<img class="film-gallery-img" src="${g.src}" alt="${g.alt || item.title}" loading="lazy">`).join("")}
+        </div>
+      ` : ""}
+    </div>
+  ` : "";
+
+  // Named photo grids (e.g. Computer Angel's "Decisions" / "Fig" sets) —
+  // desaturated by default, full color on hover.
+  const galleries = item.galleries ? item.galleries.map((section) => `
+    <div class="gallery-section">
+      <h2 class="gallery-heading">${section.heading}</h2>
+      <div class="photo-grid">
+        ${section.images.map((g) => `<img src="${g.src}" alt="${g.alt || section.heading}" loading="lazy">`).join("")}
+      </div>
+    </div>
+  `).join("") : "";
+
   container.innerHTML = `
-    <div class="film-wrap">
+    <div class="film-wrap${item.gallery && embed ? " film-wrap--wide" : ""}">
       <a class="film-back" href="/films/${film.slug}" data-link>&larr; Back to ${film.title}</a>
       <div class="film-header">
         <h1 class="film-title">${item.title}</h1>
@@ -223,8 +268,9 @@ function renderCollectionItem(parentSlug, itemSlug) {
           <span>${item.role}</span>
         </div>
       </div>
-      ${embed ? `<div class="film-embed">${embed}</div>` : ""}
+      ${media}
       <p class="film-synopsis">${item.synopsis}</p>
+      ${galleries}
       ${item.links ? `
         <ul class="link-list">
           ${item.links.map((l) => `
