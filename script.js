@@ -20,7 +20,8 @@ const FILMS = [
     year: null,
     vimeoId: "1210428564",
     youtubeId: null,
-    synopsis: "<em>After the Sky Turned Red</em> is Jamie's debut feature documentary. It follows her mother and surviving classmates at a reunion in Semey, Kazakhstan — a city that bore the human cost of the Soviet Union's nuclear weapons testing program. 456 nuclear devices were detonated between 1949 and 1989, with Kazakhstan officially recognizing more than 1.5 million citizens as victims of radiation. It is the beginning of a body of work she intends to dedicate to Central Asian stories."
+    password: "ASTR2026",
+    synopsis: "<em>After the Sky Turned Red</em> is Jamie's debut documentary. It follows her mother and surviving classmates at a reunion in Semey, Kazakhstan — a city that bore the human cost of the Soviet Union's nuclear weapons testing program. 456 nuclear devices were detonated between 1949 and 1989, with Kazakhstan officially recognizing more than 1.5 million citizens as victims of radiation. It is the beginning of a body of work she intends to dedicate to Central Asian stories."
   },
   {
     slug: "after-loss",
@@ -93,21 +94,19 @@ const FILMS = [
         color: "#2B2320",
         image: "/images/computer-angel.jpg",
         synopsis: "An ongoing content series made in partnership with Computer Angel, a wearable camera brand, shot entirely on the device. The work is intimate and introspective — tracing the inner life of a young woman navigating indecision, desire, and the private texture of everyday moments. Content posted across Reels and Carousels has collectively reached over 380,000 views and 30K likes. Shot, edited, and promoted by Jamie.",
-        // Named sub-galleries, each paired with its own Instagram link(s) below.
+        // Named sub-galleries — each heading IS the link to its Instagram
+        // carousel; images render below it in a horizontal carousel.
         galleries: [
           {
             heading: "Decisions",
+            url: "https://www.instagram.com/p/DXwy58okyTV/?img_index=1",
             images: [1, 2, 3, 4, 5, 6, 7].map((n) => ({ src: `/images/computer-angel-decisions-${n}.jpg`, alt: "Decisions — still" }))
           },
           {
             heading: "Fig",
+            url: "https://www.instagram.com/p/DX8_7b3ERQ3/?img_index=1",
             images: [1, 2, 3, 4, 5, 6].map((n) => ({ src: `/images/computer-angel-fig-${n}.jpg`, alt: "Fig — still" }))
           }
-        ],
-        links: [
-          { label: "Decisions — Carousel", url: "https://www.instagram.com/p/DXwy58okyTV/?img_index=1" },
-          { label: "Decisions — Reel", url: "https://www.instagram.com/p/DX2UStzToQI/" },
-          { label: "Fig — Carousel", url: "https://www.instagram.com/p/DX8_7b3ERQ3/?img_index=1" }
         ]
       }
     ]
@@ -167,13 +166,13 @@ function renderFilm(slug) {
   const embed = embedFor(film) || `<div class="film-embed-placeholder">Trailer coming soon</div>`;
 
   const gallery = film.gallery ? `
-    <div class="film-gallery">
-      ${film.gallery.map((g) => `<img class="film-gallery-img" src="${g.src}" alt="${g.alt || film.title}" loading="lazy">`).join("")}
+    <div class="carousel carousel--landscape">
+      ${film.gallery.map((g) => `<img src="${g.src}" alt="${g.alt || film.title}" loading="lazy">`).join("")}
     </div>
   ` : "";
 
   container.innerHTML = `
-    <div class="film-wrap${film.gallery ? " film-wrap--wide" : ""}">
+    <div class="film-wrap">
       <a class="film-back" href="/" data-link>&larr; Back to work</a>
       <div class="film-header">
         <h1 class="film-title">${film.title}</h1>
@@ -183,12 +182,11 @@ function renderFilm(slug) {
           ${film.year ? `<span>${film.year}</span>` : ""}
         </div>
       </div>
-      <div class="film-media">
-        <div class="film-embed">${embed}</div>
-        ${gallery}
-      </div>
+      <div class="film-embed">${embed}</div>
+      ${film.password ? `<p class="film-password">Password: <strong>${film.password}</strong></p>` : ""}
       <p class="film-synopsis">${film.synopsis}</p>
     </div>
+    ${gallery}
   `;
 }
 
@@ -237,30 +235,25 @@ function renderCollectionItem(parentSlug, itemSlug) {
 
   const embed = embedFor(item);
 
-  const media = embed ? `
-    <div class="film-media">
-      <div class="film-embed">${embed}</div>
-      ${item.gallery ? `
-        <div class="film-gallery">
-          ${item.gallery.map((g) => `<img class="film-gallery-img" src="${g.src}" alt="${g.alt || item.title}" loading="lazy">`).join("")}
-        </div>
-      ` : ""}
+  const gallery = item.gallery ? `
+    <div class="carousel carousel--landscape">
+      ${item.gallery.map((g) => `<img src="${g.src}" alt="${g.alt || item.title}" loading="lazy">`).join("")}
     </div>
   ` : "";
 
-  // Named photo grids (e.g. Computer Angel's "Decisions" / "Fig" sets) —
-  // desaturated by default, full color on hover.
+  // Named sub-galleries (e.g. Computer Angel's "Decisions" / "Fig" sets) —
+  // heading doubles as the link to the source Instagram post.
   const galleries = item.galleries ? item.galleries.map((section) => `
     <div class="gallery-section">
-      <h2 class="gallery-heading">${section.heading}</h2>
-      <div class="photo-grid">
+      <a class="gallery-heading" href="${section.url}" target="_blank" rel="noopener noreferrer">${section.heading} — Carousel &rarr;</a>
+      <div class="carousel carousel--portrait">
         ${section.images.map((g) => `<img src="${g.src}" alt="${g.alt || section.heading}" loading="lazy">`).join("")}
       </div>
     </div>
   `).join("") : "";
 
   container.innerHTML = `
-    <div class="film-wrap${item.gallery && embed ? " film-wrap--wide" : ""}">
+    <div class="film-wrap">
       <a class="film-back" href="/films/${film.slug}" data-link>&larr; Back to ${film.title}</a>
       <div class="film-header">
         <h1 class="film-title">${item.title}</h1>
@@ -268,17 +261,11 @@ function renderCollectionItem(parentSlug, itemSlug) {
           <span>${item.role}</span>
         </div>
       </div>
-      ${media}
+      ${embed ? `<div class="film-embed">${embed}</div>` : ""}
       <p class="film-synopsis">${item.synopsis}</p>
-      ${galleries}
-      ${item.links ? `
-        <ul class="link-list">
-          ${item.links.map((l) => `
-            <li><a class="link-list-item" href="${l.url}" target="_blank" rel="noopener noreferrer">${l.label} &rarr;</a></li>
-          `).join("")}
-        </ul>
-      ` : ""}
     </div>
+    ${gallery}
+    ${galleries}
   `;
 }
 

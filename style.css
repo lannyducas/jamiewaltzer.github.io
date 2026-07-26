@@ -297,12 +297,6 @@ nav {
   max-width: 780px;
 }
 
-/* Wider column for films with a gallery, so the embed + side images
-   have room to sit next to each other instead of cramping. */
-.film-wrap--wide {
-  max-width: 1040px;
-}
-
 .film-back {
   display: inline-block;
   font-size: 11px;
@@ -344,38 +338,33 @@ nav {
   color: var(--muted);
 }
 
-/* Wraps the embed (and, on films with a gallery, the side images) */
-.film-media {
-  margin-bottom: 2.5rem;
-}
-
-.film-wrap--wide .film-media {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 1.5rem;
-  align-items: start;
-}
-
 .film-embed {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
   background: #000;
   overflow: hidden;
+  margin-bottom: 2.5rem;
 }
 
-.film-gallery {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+/* Tighten the gap above a password subtitle, since it's meant to
+   read as a caption on the embed rather than a separate block. */
+.film-embed:has(+ .film-password) {
+  margin-bottom: 0.75rem;
 }
 
-.film-gallery-img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  border-radius: 10px;
+.film-password {
+  font-size: 0.85rem;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+  margin-bottom: 2.5rem;
+}
+
+.film-password strong {
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: 0.05em;
 }
 
 .film-embed iframe {
@@ -422,67 +411,92 @@ nav {
   margin-top: 2.5rem;
 }
 
-/* ─── Photo Grid (named galleries on collection items, e.g. ───────
-   Computer Angel's "Decisions" / "Fig" sets) — CSS-column masonry,
-   desaturated by default with a full-color reveal on hover for a
-   moody, contact-sheet feel. */
-.gallery-section {
-  margin-top: 3rem;
+/* ─── Carousel ───────────────────────────────────────────────────
+   Horizontally-scrolling image strip, rendered as a sibling of
+   .film-wrap (not nested inside it) so it isn't capped by that
+   column's max-width — it bleeds to the right edge of the viewport
+   on wide screens and simply scrolls once images overflow. Left
+   edge stays aligned with the rest of the page's text column via
+   padding-left (matches .film-wrap's own padding).
+   Used for a film's own `gallery` (large landscape stills) and for
+   named sub-galleries on collection items (e.g. Computer Angel's
+   "Decisions" / "Fig" sets, portrait diptychs). Desaturated by
+   default, full color on hover. */
+.carousel {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 0 0 3rem 3rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted) transparent;
 }
 
-.gallery-section:first-of-type {
+.carousel::-webkit-scrollbar {
+  height: 6px;
+}
+
+.carousel::-webkit-scrollbar-thumb {
+  background: var(--muted);
+  border-radius: 3px;
+}
+
+.carousel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.carousel img {
+  flex: 0 0 auto;
+  display: block;
+  border-radius: 10px;
+  scroll-snap-align: start;
+  filter: grayscale(1) contrast(1.05);
+  transition: filter 0.5s ease;
+}
+
+.carousel img:hover {
+  filter: grayscale(0);
+}
+
+.carousel--landscape img {
+  width: min(600px, 90vw);
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.carousel--portrait img {
+  height: min(550px, 71vw);
+  width: auto;
+}
+
+.gallery-section {
+  padding-left: 3rem;
   margin-top: 2.5rem;
 }
 
+.gallery-section:first-of-type {
+  margin-top: 0;
+}
+
+/* Section already provides the left offset — cancel the carousel's
+   own so it isn't applied twice. */
+.gallery-section .carousel {
+  padding-left: 0;
+}
+
 .gallery-heading {
+  display: inline-block;
+  margin-bottom: 1rem;
   font-size: 10px;
   font-weight: 400;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 1rem;
-}
-
-.photo-grid {
-  columns: 3;
-  column-gap: 0.75rem;
-}
-
-.photo-grid img {
-  display: block;
-  width: 100%;
-  margin-bottom: 0.75rem;
-  border-radius: 6px;
-  break-inside: avoid;
-  filter: grayscale(1) contrast(1.05);
-  transition: filter 0.5s ease;
-}
-
-.photo-grid img:hover {
-  filter: grayscale(0);
-}
-
-/* ─── External Link List (collection items w/ no embed) ───────── */
-.link-list {
-  list-style: none;
-  margin-top: 2rem;
-  border-top: 0.5px solid var(--border);
-}
-
-.link-list-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 0;
-  border-bottom: 0.5px solid var(--border);
-  font-size: 0.95rem;
-  letter-spacing: 0.01em;
-  color: var(--text);
   transition: color 0.2s ease;
 }
 
-.link-list-item:hover {
-  color: var(--muted);
+.gallery-heading:hover {
+  color: var(--text);
 }
 
 /* ─── Responsive ─────────────────────────────────────────────── */
@@ -572,11 +586,19 @@ nav {
     gap: 1rem;
   }
 
-  .film-wrap--wide .film-media {
-    grid-template-columns: 1fr;
+  .carousel {
+    padding-left: 1.5rem;
   }
 
-  .photo-grid {
-    columns: 2;
+  .gallery-section {
+    padding-left: 1.5rem;
+  }
+
+  .carousel--landscape img {
+    width: 90vw;
+  }
+
+  .carousel--portrait img {
+    height: 64vh;
   }
 }
